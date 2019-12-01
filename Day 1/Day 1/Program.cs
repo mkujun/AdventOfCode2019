@@ -7,6 +7,7 @@ namespace Day_1
 {
     class Program
     {
+        // part 1
         static int TankMass(int input)
         {
             int mass = 0;
@@ -14,6 +15,7 @@ namespace Day_1
             return mass += (input / 3) - 2;
         }
 
+        // part 2
         static int FuelMass(int input, int fuelMassByTank)
         {
             int mass = 0;
@@ -22,10 +24,10 @@ namespace Day_1
 
             if(mass <= 0)
             {
-                return fuelMassByTank += mass;
+                return fuelMassByTank;
             }
 
-            return FuelMass(mass, fuelMassByTank);
+            return FuelMass(mass, fuelMassByTank + mass);
         }
 
         static string[] ReadFile(string path)
@@ -44,9 +46,12 @@ namespace Day_1
         {
             List<int> intList = new List<int>();
 
-            foreach (var item in stringArray)
+            if (stringArray != null)
             {
-                intList.Add(Int32.Parse(item));
+                foreach (var item in stringArray)
+                {
+                    intList.Add(Int32.Parse(item));
+                }
             }
 
             return intList;
@@ -54,34 +59,24 @@ namespace Day_1
 
         static void Main(string[] args)
         {
-            string [] stringInput = ReadFile("C:\\Projects\\AdventOfCode2019\\Day 1\\Day 1\\input\\input.txt");
+            string[] stringInput = ReadFile("your path to file...");
             List<int> intInput = ConvertStringArrayToIntList(stringInput);
 
+            int fuelMass = 0;
 
-            /*
-            int totalMass = 0;
             foreach (var tank in intInput)
             {
-                int tankMass = TankMass(tank);
-                int fuelMass = FuelMass(tank, 0);
-
-                totalMass += (tankMass + fuelMass);
-                //totalMass += (TankMass(tank) + FuelMass(tank, 0));
+                fuelMass += (FuelMass(tank, 0));
             }
-            */
 
-            //List<int> testData = new List<int>();
-            //testData.Add(12);
-            //testData.Add(14);
-            //testData.Add(1969);
-            //testData.Add(100756);
+            int tankMass = 0;
 
-            int totalMass = 0;
-            int tankMass = TankMass(1969);
-            int fuelMass = FuelMass(1969, 0);
-            //totalMass += (TankMass(1969) + FuelMass(1969, 0));
+            foreach (var tank in intInput)
+            {
+                tankMass += TankMass(tank);
+            }
 
-            Console.WriteLine("Hello World!");
+            Console.WriteLine("Hello Day 1!");
         }
     }
 }
