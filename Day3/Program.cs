@@ -5,8 +5,47 @@ namespace Day3
 {
     class Program
     {
+        public class Wire
+        {
+            private List<Tuple<int, int>> Points;
+            
+            public void SetPoint(int x, int y)
+            {
+                Points.Add(new Tuple<int, int>(x, y));
+            }
+            public int GetWireLength()
+            {
+                return Points.Count;
+            }
+
+            public List<Tuple<int, int>> GetPoints() => Points;
+        }
+
         public class ManhattanGrid
         {
+            // todo: construct Wire and add points to it
+            public int CalculateWireDistance(Wire wire)
+            {
+                int counter = 0;
+                foreach (var point in wire.GetPoints())
+                {
+                    foreach (var intersecion in Intersections)
+                    {
+                        if (point.Item1 == intersecion.Item1 && point.Item2 == intersecion.Item2)
+                        {
+                            counter++;
+                            return counter;
+                        }
+                        else
+                        {
+                            counter++;
+                        }
+                    }
+                }
+
+                return counter;
+            }
+
             private int SizeX { get; set; }
             private int SizeY { get; set; }
             private string[,] Grid { get; set; }
@@ -50,6 +89,7 @@ namespace Day3
                         else
                         {
                             Grid[StartingPoint.Item1, j] = "-";
+                            // todo: add points to wire
                         }
                     }
                     StartingPoint = new Tuple<int, int>(StartingPoint.Item1, StartingPoint.Item2 + distance);
