@@ -66,7 +66,7 @@ namespace Day4
 
             foreach (var item in dictionary)
             {
-                if(item.Value == 2)
+                if (item.Value == 2)
                 {
                     return true;
                 }

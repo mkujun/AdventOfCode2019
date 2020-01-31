@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 
-namespace Day_1
+namespace Day1
 {
     class Program
     {
@@ -21,7 +21,7 @@ namespace Day_1
 
             mass += (input / 3) - 2;
 
-            if(mass <= 0)
+            if (mass <= 0)
             {
                 return fuelMassByTank;
             }

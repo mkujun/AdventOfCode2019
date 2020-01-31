@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Day_3
+namespace Day3
 {
     class Program
     {
@@ -134,7 +134,7 @@ namespace Day_3
             {
                 Wires2.Add(wire2[i]);
             }
-            
+
             manhattanGrid.SetStartingPosition(30000, 30000);
             foreach (var wire in Wires1)
             {

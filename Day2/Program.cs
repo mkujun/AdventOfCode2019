@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 
-namespace Day_2
+namespace Day2
 {
     class Program
     {
@@ -51,7 +51,7 @@ namespace Day_2
             return data;
         }
 
-        static Tuple<int,int> FindNounAndVerb(int output)
+        static Tuple<int, int> FindNounAndVerb(int output)
         {
             int[] opcodeResult;
 
