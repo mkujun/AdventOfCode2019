@@ -26,11 +26,16 @@ namespace Day6
                 return childNode;
             }
 
-            // todo: finish this!!
-            public TreeNode<T> FindParent(T parent)
+            // todo: find parent by data...finish this!!
+            public TreeNode<T> FindNode(T data)
             {
-                return null;
+                if (EqualityComparer<T>.Default.Equals(Data, data))
+                {
+                    return this;
+                }
+                else return null;
             }
+
         }
 
         static void Main(string[] args)
@@ -44,6 +49,8 @@ namespace Day6
                     TreeNode<int> child22 = child2.AddChild(22);
                 }
             }
+
+            TreeNode<int> test = root.FindNode(0);
 
             Console.WriteLine("Hello World!");
         }
