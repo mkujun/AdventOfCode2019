@@ -6,51 +6,54 @@ namespace Day6
 {
     class Program
     {
-        public class TreeNode<T>
+        public class Interstellar
         {
-            public T Data { get; set; }
-            public TreeNode<T> Parent { get; set; }
-            public List<TreeNode<T>> Children { get; set; }
+            public List<List<string>> Dataset;
 
-            public TreeNode(T data)
+            public Interstellar()
             {
-                Data = data;
-                Children = new List<TreeNode<T>>();
+                Dataset = new List<List<string>>();
             }
 
-            // find parent, then add child
-            public TreeNode<T> AddChild(T child)
+            public void Add(string input)
             {
-                TreeNode<T> childNode = new TreeNode<T>(child) { Parent = this };
-                Children.Add(childNode);
-                return childNode;
-            }
+                string planet = input.Split(')')[0];
+                string orbit = input.Split(')')[1];
 
-            // todo: find parent by data...finish this!!
-            public TreeNode<T> FindNode(T data)
-            {
-                if (EqualityComparer<T>.Default.Equals(Data, data))
+                if (Dataset.Count == 0)
                 {
-                    return this;
+                    Dataset.Add(new List<string> { planet , orbit });
+                    Dataset.Add(new List<string> { orbit });
                 }
-                else return null;
+                else
+                {
+                    foreach (var planetItem in Dataset)
+                    {
+                        if (planetItem.Contains(planet))
+                        {
+                            planetItem.Add(orbit);
+                        }
+                    }
+                    Dataset.Add(new List<string> { orbit });
+                }
             }
-
         }
 
         static void Main(string[] args)
         {
-            TreeNode<int> root = new TreeNode<int>(0);
+            Interstellar interstellar = new Interstellar();
+            string line;
+            System.IO.StreamReader file = new System.IO.StreamReader(@"C:\Users\markok\source\repos\AdventOfCode2019\Day6\taskInput.txt");
+            while((line = file.ReadLine()) != null)
             {
-                TreeNode<int> child1 = root.AddChild(1);
-                TreeNode<int> child2 = root.AddChild(2);
-                {
-                    TreeNode<int> child21 = child2.AddChild(21);
-                    TreeNode<int> child22 = child2.AddChild(22);
-                }
+                interstellar.Add(line);
             }
 
-            TreeNode<int> test = root.FindNode(0);
+            int count = 0;
+            foreach (var stellar in interstellar.Dataset)
+            {
+                count = count + (stellar.Count - 1);
+            }
 
             Console.WriteLine("Hello World!");
         }
