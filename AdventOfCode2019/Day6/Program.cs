@@ -15,6 +15,8 @@ namespace Day6
                 Dataset = new List<List<string>>();
             }
 
+            // todo: should be able to add planets at the first place
+            // example: P)COM
             public void Add(string input)
             {
                 string planet = input.Split(')')[0];
@@ -43,7 +45,7 @@ namespace Day6
         {
             Interstellar interstellar = new Interstellar();
             string line;
-            System.IO.StreamReader file = new System.IO.StreamReader(@"C:\Users\markok\source\repos\AdventOfCode2019\Day6\taskInput.txt");
+            System.IO.StreamReader file = new System.IO.StreamReader(@"C:\Users\markok\source\repos\AdventOfCode2019\Day6\input.txt");
             while((line = file.ReadLine()) != null)
             {
                 interstellar.Add(line);
