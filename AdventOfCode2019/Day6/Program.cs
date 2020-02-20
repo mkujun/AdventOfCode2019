@@ -8,37 +8,60 @@ namespace Day6
     {
         public class Interstellar
         {
-            public List<List<string>> Dataset;
+            public Dictionary<string, List<string>> Planets;
 
             public Interstellar()
             {
-                Dataset = new List<List<string>>();
+                Planets = new Dictionary<string, List<string>>();
             }
 
-            // todo: should be able to add planets at the first place
-            // example: P)COM
-            public void Add(string input)
+            public void AddOrbitToPlanets(string planet, string orbit)
             {
-                string planet = input.Split(')')[0];
-                string orbit = input.Split(')')[1];
-
-                if (Dataset.Count == 0)
+                foreach (var item in Planets)
                 {
-                    Dataset.Add(new List<string> { planet , orbit });
-                    Dataset.Add(new List<string> { orbit });
-                }
-                else
-                {
-                    foreach (var planetItem in Dataset)
+                    if (item.Value.Contains(planet))
                     {
-                        if (planetItem.Contains(planet))
-                        {
-                            planetItem.Add(orbit);
-                        }
+                        item.Value.Add(orbit);
                     }
-                    Dataset.Add(new List<string> { orbit });
                 }
             }
+            
+            public void Add(string planet, string orbit)
+            {
+                List<string> orbits = new List<string>();
+
+                // planet exists, but orbit does not
+                if( Planets.ContainsKey(planet))
+                {
+                    Planets[planet].Add(orbit);
+                    if (!Planets.ContainsKey(orbit))
+                        Planets.Add(orbit, new List<string>());
+
+                    AddOrbitToPlanets(planet, orbit);
+                }
+
+                // no planet
+                if (!Planets.ContainsKey(planet))
+                {
+                    // no planet and no orbit
+                    if (!Planets.ContainsKey(orbit) && !Planets.ContainsKey(planet))
+                    {
+                        Planets.Add(planet, new List<string>());
+                        Planets[planet].Add(orbit);
+                        Planets.Add(orbit, new List<string>());
+                    }
+                    // no planet but orbit
+                    else
+                    {
+                        Planets.Add(planet, new List<string>());
+                        orbits = Planets[orbit];
+                        Planets[planet].Add(orbit);
+                        Planets[planet].AddRange(orbits);
+                    }
+                }
+
+            }
+
         }
 
         static void Main(string[] args)
@@ -46,15 +69,19 @@ namespace Day6
             Interstellar interstellar = new Interstellar();
             string line;
             System.IO.StreamReader file = new System.IO.StreamReader(@"C:\Users\markok\source\repos\AdventOfCode2019\Day6\input.txt");
+
             while((line = file.ReadLine()) != null)
             {
-                interstellar.Add(line);
+                string planet = line.Split(')')[0];
+                string orbit = line.Split(')')[1];
+
+                interstellar.Add(planet, orbit);
             }
 
             int count = 0;
-            foreach (var stellar in interstellar.Dataset)
+            foreach (var stellar in interstellar.Planets)
             {
-                count = count + (stellar.Count - 1);
+                count = count + (stellar.Value.Count);
             }
 
             Console.WriteLine("Hello World!");
