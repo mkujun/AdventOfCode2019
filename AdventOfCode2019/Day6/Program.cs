@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
+using System.Text;
+using System.Text.Unicode;
 
 namespace Day6
 {
@@ -70,12 +73,36 @@ namespace Day6
             string line;
             System.IO.StreamReader file = new System.IO.StreamReader(@"C:\Users\markok\source\repos\AdventOfCode2019\Day6\input.txt");
 
+            string log = @"C:\Users\markok\source\repos\AdventOfCode2019\Day6\log.txt";
+
             while((line = file.ReadLine()) != null)
             {
                 string planet = line.Split(')')[0];
                 string orbit = line.Split(')')[1];
 
                 interstellar.Add(planet, orbit);
+
+                using (StreamWriter sw = File.AppendText(log))
+                {
+                    sw.WriteLine("===========================");
+                    sw.WriteLine("New planet : {0}", planet);
+                    sw.WriteLine("New orbit : {0}", orbit);
+                    sw.WriteLine("===========================");
+
+                    StringBuilder stringBuilder = new StringBuilder();
+
+                    foreach (var item in interstellar.Planets)
+                    {
+                        sw.WriteLine("Planet : {0}", planet);
+
+                        foreach (var value in item.Value)
+                        {
+                            stringBuilder.Append(value);
+                        }
+                        sw.WriteLine("Orbits: {0}", stringBuilder);
+                    }
+                }
+                
             }
 
             int count = 0;
