@@ -71,7 +71,7 @@ namespace Day6
         {
             Interstellar interstellar = new Interstellar();
             string line;
-            System.IO.StreamReader file = new System.IO.StreamReader(@"C:\Users\markok\source\repos\AdventOfCode2019\Day6\input.txt");
+            System.IO.StreamReader file = new System.IO.StreamReader(@"C:\Users\markok\source\repos\Day6\input.txt");
 
             string log = @"C:\Users\markok\source\repos\AdventOfCode2019\Day6\log.txt";
 
