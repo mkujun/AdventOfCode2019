@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Text.Unicode;
 
@@ -9,109 +10,116 @@ namespace Day6
 {
     class Program
     {
-        public class Interstellar
+        public class PlanetNode
         {
-            public Dictionary<string, List<string>> Planets;
+            public string Name;
+            public List<string> Orbits;
 
-            public Interstellar()
+            public PlanetNode(string planet, string orbit)
             {
-                Planets = new Dictionary<string, List<string>>();
+                Name = planet;
+                Orbits = new List<string>();
+                Orbits.Add(orbit);
             }
-
-            public void AddOrbitToPlanets(string planet, string orbit)
-            {
-                foreach (var item in Planets)
-                {
-                    if (item.Value.Contains(planet))
-                    {
-                        item.Value.Add(orbit);
-                    }
-                }
-            }
-            
-            public void Add(string planet, string orbit)
-            {
-                List<string> orbits = new List<string>();
-
-                // planet exists, but orbit does not
-                if( Planets.ContainsKey(planet))
-                {
-                    Planets[planet].Add(orbit);
-                    if (!Planets.ContainsKey(orbit))
-                        Planets.Add(orbit, new List<string>());
-
-                    AddOrbitToPlanets(planet, orbit);
-                }
-
-                // no planet
-                if (!Planets.ContainsKey(planet))
-                {
-                    // no planet and no orbit
-                    if (!Planets.ContainsKey(orbit) && !Planets.ContainsKey(planet))
-                    {
-                        Planets.Add(planet, new List<string>());
-                        Planets[planet].Add(orbit);
-                        Planets.Add(orbit, new List<string>());
-                    }
-                    // no planet but orbit
-                    else
-                    {
-                        Planets.Add(planet, new List<string>());
-                        orbits = Planets[orbit];
-                        Planets[planet].Add(orbit);
-                        Planets[planet].AddRange(orbits);
-                    }
-                }
-
-            }
-
         }
 
-        static void Main(string[] args)
+        public class Map
         {
-            Interstellar interstellar = new Interstellar();
-            string line;
-            System.IO.StreamReader file = new System.IO.StreamReader(@"C:\Users\markok\source\repos\Day6\input.txt");
+            public List<PlanetNode> PlanetNodes;
+            public string[] inputData;
 
-            string log = @"C:\Users\markok\source\repos\AdventOfCode2019\Day6\log.txt";
-
-            while((line = file.ReadLine()) != null)
+            public Map(string[] input)
             {
-                string planet = line.Split(')')[0];
-                string orbit = line.Split(')')[1];
+                PlanetNodes = new List<PlanetNode>();
+                inputData = input;
+            }
 
-                interstellar.Add(planet, orbit);
+            public void AddToMap(string planet, string orbit)
+            {
+                bool isPlanetInList = false;
 
-                using (StreamWriter sw = File.AppendText(log))
+                // mapa je prazna
+                if (PlanetNodes.Count == 0)
                 {
-                    sw.WriteLine("===========================");
-                    sw.WriteLine("New planet : {0}", planet);
-                    sw.WriteLine("New orbit : {0}", orbit);
-                    sw.WriteLine("===========================");
-
-                    StringBuilder stringBuilder = new StringBuilder();
-
-                    foreach (var item in interstellar.Planets)
+                    PlanetNode planetNode = new PlanetNode(planet, orbit);
+                    PlanetNodes.Add(planetNode);
+                }
+                // prodji kroz listu
+                // gledaj svaki element ima li medju orbitama planet
+                // ako ima, dodaj orbitu
+                else
+                {
+                    for (int i = 0; i < PlanetNodes.Count; i++)
                     {
-                        sw.WriteLine("Planet : {0}", planet);
-
-                        foreach (var value in item.Value)
+                        //
+                        if (PlanetNodes[i].Orbits.Contains(planet))
                         {
-                            stringBuilder.Append(value);
+                            PlanetNodes[i].Orbits.Add(orbit);
                         }
-                        sw.WriteLine("Orbits: {0}", stringBuilder);
+
+                        if (PlanetNodes[i].Name == planet)
+                        {
+                            isPlanetInList = true;
+                            PlanetNodes[i].Orbits.Add(orbit);
+                        }
+                    }
+
+                    // ako planet nije u listi dodaj ga
+                    if(!isPlanetInList)
+                    {
+                        PlanetNode planetNode = new PlanetNode(planet, orbit);
+                        PlanetNodes.Add(planetNode);
+                    }
+
+                }
+
+            }
+
+            internal void FindCOM()
+            {
+                for (int i = 0; i < inputData.Length; i++)
+                {
+                    string planet = inputData[i].Split(")")[0];
+                    string orbit = inputData[i].Split(")")[1];
+
+                    if (planet == "COM")
+                    {
+                        AddToMap(planet, orbit);
+                        FindNext(orbit);
                     }
                 }
-                
             }
+
+            internal void FindNext(string planetToFind)
+            {
+                for (int i = 0; i < inputData.Length; i++)
+                {
+                    string planet = inputData[i].Split(")")[0];
+                    string orbit = inputData[i].Split(")")[1];
+
+                    if(planet == planetToFind)
+                    {
+                        AddToMap(planet, orbit);
+                        FindNext(orbit);
+                    } 
+                }
+            }
+        }
+        
+        static void Main(string[] args)
+        {
+            //string[] input = File.ReadAllLines(@"C:\Users\Korisnik\AdventOfCode2019\Day6\input.txt");
+            string[] input = File.ReadAllLines(@"C:\Users\Korisnik\AdventOfCode2019\Day6\taskInput.txt");
+            Map mapa = new Map(input);
+            mapa.FindCOM();
 
             int count = 0;
-            foreach (var stellar in interstellar.Planets)
+            foreach (var item in mapa.PlanetNodes)
             {
-                count = count + (stellar.Value.Count);
+                count = count + item.Orbits.Count;
             }
 
-            Console.WriteLine("Hello World!");
+            Console.WriteLine("test");
         }
     }
 }
